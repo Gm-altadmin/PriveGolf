@@ -93,6 +93,7 @@ body{overflow-y:auto;overflow-x:hidden;padding-bottom:80px}
 /* ═══ MODAL ═══ */
 .cm-ov{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
 .cm-ov.open{opacity:1;pointer-events:all}
+body.modal-open .next-bar{display:none !important}
 .cm{width:min(780px,94vw);max-height:90vh;background:rgba(8,20,12,.97);border:1px solid rgba(201,169,110,.2);overflow-y:auto;position:relative;display:flex;flex-direction:column;border-radius:4px}
 .cm-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;background:rgba(201,169,110,.15);border:.5px solid rgba(201,169,110,.3);color:#C9A96E;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:background .3s}
 .cm-close:hover{background:rgba(201,169,110,.3)}
@@ -624,6 +625,7 @@ document.getElementById('coursesList').addEventListener('click',e=>{
 
 function openCourseModal(key){
   activeCourseKey=key;
+  document.body.classList.add('modal-open');
   const course=COURSES.find(x=>x.key===key);
   if(!course) return;
   const isHotel=key===hotelCourseKey;
@@ -697,13 +699,14 @@ function renderModalPlayers(key,isHotel){
 
 function closeCourseModal(){
   document.getElementById('cmOv').classList.remove('open');
+  document.body.classList.remove('modal-open');
   updateProgress();
   renderCourses(); // Re-render cards to show updated summary
 }
 
 document.getElementById('cmClose').addEventListener('click',closeCourseModal);
 document.getElementById('cmDone').addEventListener('click',closeCourseModal);
-document.getElementById('cmOv').addEventListener('click',e=>{ if(e.target.id==='cmOv') closeCourseModal(); });
+document.getElementById('cmOv').addEventListener('click',e=>{ if(e.target.id==='cmOv'){ document.body.classList.remove('modal-open'); closeCourseModal(); } });
 
 /* ═══════════════════════════════════════
    PROGRESS
