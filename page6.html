@@ -244,6 +244,7 @@ body.modal-open .next-bar{display:none !important}
   .btn-next{width:100%;padding:12px 20px;font-size:8px;letter-spacing:.3em;max-width:none}
 }
 </style>
+<base target="_blank">
 </head>
 <body>
 <div class="bg"><img src="6.webp" alt=""></div>
@@ -300,6 +301,23 @@ body.modal-open .next-bar{display:none !important}
 
   <div class="courses-wrap" id="coursesWrap" style="display:none">
     <div class="courses-inner" id="coursesList"></div>
+  </div>
+</div>
+
+<!-- SUMMARY MODAL -->
+<div class="sm-ov" id="smOv">
+  <div class="sm" id="smBox">
+    <button class="sm-close" id="smClose">✕</button>
+    <div class="sm-header">
+      <div class="sm-title">Golf <em>Programınız</em></div>
+      <div class="sm-sub">Oyun Planı Özeti</div>
+    </div>
+    <div class="sm-body" id="smBody"></div>
+    <div class="sm-totals" id="smTotals"></div>
+    <div class="sm-actions">
+      <button class="sm-btn-back" id="smBack">← Düzenle</button>
+      <button class="sm-btn-confirm" id="smConfirm">Onayla →</button>
+    </div>
   </div>
 </div>
 
@@ -776,7 +794,7 @@ document.getElementById('btnNext').onclick=()=>{
   localStorage.setItem('privePlan', JSON.stringify(plan));
   localStorage.setItem('privePlayerNames', JSON.stringify(playerNames.slice(0,playerCount)));
   localStorage.setItem('priveTotalRounds', totalRounds);
-  window.location.href='page7.html';
+  openSummaryModal();
 };
 
 /* Check if all players locked → show courses */
@@ -801,6 +819,94 @@ function checkAllLocked(){
     if(lm) lm.style.display='';
   }
 }
+
+/* ═══════════════════════════════════════
+   SUMMARY MODAL
+═══════════════════════════════════════ */
+function openSummaryModal(){
+  const smBody = document.getElementById('smBody');
+  const smTotals = document.getElementById('smTotals');
+  smBody.innerHTML = '';
+
+  playerNames.forEach((name, pi) => {
+    const playerCourses = [];
+    let playerTotal = 0;
+    COURSES.forEach(c => {
+      const r = plan[c.key][pi] || 0;
+      if(r > 0){
+        playerCourses.push({...c, rounds: r});
+        playerTotal += r;
+      }
+    });
+
+    playerCourses.sort((a,b) => {
+      if(a.key === hotelCourseKey) return -1;
+      if(b.key === hotelCourseKey) return 1;
+      return b.rounds - a.rounds;
+    });
+
+    const card = document.createElement('div');
+    card.className = 'sm-player-card';
+
+    let bodyHtml = '';
+    if(playerCourses.length === 0){
+      bodyHtml = '<div class="sm-empty">Henüz saha seçilmedi</div>';
+    } else {
+      playerCourses.forEach(c => {
+        const isHotel = c.key === hotelCourseKey;
+        bodyHtml += `
+          <div class="sm-course-row">
+            <div class="sm-course-img"><img src="${imgPath(c)}" alt="${c.name}" onerror="this.style.display='none'"></div>
+            <div class="sm-course-info">
+              <div class="sm-course-name">${c.name}${isHotel ? ' <span style="color:#C9A96E">⛳</span>' : ''}</div>
+            </div>
+            <div class="sm-course-round">${c.rounds}</div>
+          </div>`;
+      });
+    }
+
+    card.innerHTML = `
+      <div class="sm-player-header">
+        <div class="sm-avatar">${(name||'').charAt(0).toUpperCase()}</div>
+        <div class="sm-player-name">${name || 'Oyuncu ' + (pi+1)}</div>
+        <div class="sm-player-total">Toplam: ${playerTotal} Round</div>
+      </div>
+      <div class="sm-player-body">${bodyHtml}</div>`;
+
+    smBody.appendChild(card);
+  });
+
+  // Totals
+  let grandTotal = 0;
+  let courseCount = 0;
+  COURSES.forEach(c => {
+    let ct = 0;
+    for(let i=0;i<playerCount;i++) ct += plan[c.key][i]||0;
+    if(ct > 0){ grandTotal += ct; courseCount++; }
+  });
+
+  smTotals.innerHTML = `
+    <div class="sm-total-item"><div class="sm-total-val">${grandTotal}</div><div class="sm-total-lbl">Toplam Round</div></div>
+    <div class="sm-total-item"><div class="sm-total-val">${playerCount}</div><div class="sm-total-lbl">Oyuncu</div></div>
+    <div class="sm-total-item"><div class="sm-total-val">${courseCount}</div><div class="sm-total-lbl">Saha</div></div>
+    <div class="sm-total-item"><div class="sm-total-val">${totalRounds}</div><div class="sm-total-lbl">Round/Kişi</div></div>`;
+
+  document.getElementById('smOv').classList.add('open');
+  document.getElementById('smBox').scrollTop = 0;
+}
+
+function closeSummaryModal(){
+  document.getElementById('smOv').classList.remove('open');
+}
+
+document.getElementById('smClose').addEventListener('click', closeSummaryModal);
+document.getElementById('smBack').addEventListener('click', closeSummaryModal);
+document.getElementById('smConfirm').addEventListener('click', ()=>{
+  window.location.href = 'page8.html';
+});
+document.getElementById('smOv').addEventListener('click', e=>{
+  if(e.target.id === 'smOv') closeSummaryModal();
+});
 
 /* Init */
 renderPlayerNames();
