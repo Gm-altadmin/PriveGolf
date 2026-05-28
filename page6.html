@@ -878,6 +878,7 @@ function checkAllLocked(){
    SUMMARY MODAL
 ═══════════════════════════════════════ */
 function openSummaryModal(){
+  document.body.classList.add('modal-open');
   const smBody = document.getElementById('smBody');
   const smTotals = document.getElementById('smTotals');
   smBody.innerHTML = '';
@@ -950,6 +951,7 @@ function openSummaryModal(){
 }
 
 function closeSummaryModal(){
+  document.body.classList.remove('modal-open');
   document.getElementById('smOv').classList.remove('open');
 }
 
