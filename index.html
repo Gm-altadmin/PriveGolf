@@ -61,94 +61,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a1a10}
 .slogan-tr em{color:#C9A96E;font-style:italic}
 .slogan-en{font-family:'Montserrat',sans-serif;font-size:clamp(9px,1.1vw,12px);font-weight:400;letter-spacing:.5em;text-transform:uppercase;color:rgba(201,169,110,.7);opacity:0;animation:fadeIn 1.4s 4.6s ease forwards}
 
-/* ── ULTRA PREMIUM CTA BUTTON ── */
-.cta-w{margin-top:64px;opacity:0;animation:fadeIn 1.2s 5.2s ease forwards}
-
-.btn-premium{
-  position:relative;display:inline-flex;align-items:center;justify-content:center;
-  font-family:'Montserrat',sans-serif;
-  font-size:11px;font-weight:500;letter-spacing:.6em;
-  text-transform:uppercase;color:#E8D5A8;
-  padding:24px 64px;
-  text-decoration:none;cursor:pointer;
-  transition:all .6s cubic-bezier(.16,1,.3,1);
-  background:rgba(201,169,110,0.05);
-  backdrop-filter:blur(15px);
-  border:1px solid rgba(201,169,110,0.2);
-  overflow:visible;
-}
-
-/* İç Çerçeve */
-.btn-premium::before {
-  content: '';
-  position: absolute;
-  inset: 4px;
-  border: 1px solid rgba(201,169,110,0.4);
-  transition: all .6s ease;
-}
-
-/* Köşe Elmasları */
-.btn-premium .corner {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: #C9A96E;
-  transform: rotate(45deg);
-  box-shadow: 0 0 10px #C9A96E;
-  transition: all .6s ease;
-}
-.btn-premium .c-tl { top: -3px; left: -3px; }
-.btn-premium .c-tr { top: -3px; right: -3px; }
-.btn-premium .c-bl { bottom: -3px; left: -3px; }
-.btn-premium .c-br { bottom: -3px; right: -3px; }
-
-/* Parlama Efekti */
-.btn-premium .shine {
-  position: absolute;
-  top: 0; left: -100%;
-  width: 50%; height: 100%;
-  background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
-  transform: skewX(-25deg);
-  animation: premiumShine 4s infinite;
-}
-
-@keyframes premiumShine {
-  0% { left: -100%; }
-  30% { left: 150%; }
-  100% { left: 150%; }
-}
-
-/* Nabız Dalgalanması */
-.btn-premium {
-  animation: premiumPulse 2.5s infinite;
-}
-
-@keyframes premiumPulse {
-  0% { box-shadow: 0 0 0 0 rgba(201,169,110, 0.2), 0 0 40px rgba(0,0,0,0.3); }
-  70% { box-shadow: 0 0 0 20px rgba(201,169,110, 0), 0 0 40px rgba(0,0,0,0.3); }
-  100% { box-shadow: 0 0 0 0 rgba(201,169,110, 0), 0 0 40px rgba(0,0,0,0.3); }
-}
-
-.btn-premium:hover{
-  background:rgba(201,169,110,0.15);
-  color:#fff;
-  letter-spacing:.7em;
-  transform:translateY(-5px);
-  border-color:rgba(201,169,110,0.6);
-}
-
-.btn-premium:hover::before {
-  inset: -2px;
-  border-color: rgba(201,169,110,0.8);
-}
-
-.btn-premium:hover .corner {
-  background: #fff;
-  box-shadow: 0 0 15px #fff;
-}
-
-.btn-premium:active{transform:translateY(-2px) scale(.98);}
-
 /* ── BOTTOM BAR ── */
 .bottom-bar{position:fixed;bottom:0;left:0;right:0;z-index:20;padding:28px 52px;display:flex;align-items:flex-end;justify-content:center;opacity:0;animation:fadeIn 1s 5.8s ease forwards}
 .bot-loc{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:400;letter-spacing:.35em;text-transform:uppercase;color:rgba(245,241,235,.65);display:flex;align-items:center;gap:10px}
@@ -211,16 +123,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a1a10}
     <div class="slogan-tr" data-i18n="slogan">Bir Golf Oyunundan <em>Çok Daha Fazlası</em></div>
     <div class="slogan-en" data-i18n="sloganSub">More than just a round of golf</div>
   </div>
-  <div class="cta-w">
-    <a class="btn-premium" id="btn" href="2.html">
-      <div class="corner c-tl"></div>
-      <div class="corner c-tr"></div>
-      <div class="corner c-bl"></div>
-      <div class="corner c-br"></div>
-      <div class="shine"></div>
-      <span data-i18n="cta">Deneyimini Tasarla</span>
-    </a>
-  </div>
+
 </div>
 
 <div class="bottom-bar">
@@ -234,28 +137,24 @@ const translations = {
     tag: "Luxury Golf Experiences",
     slogan: "Bir Golf Oyunundan <em>Çok Daha Fazlası</em>",
     sloganSub: "More than just a round of golf",
-    cta: "Deneyimini Tasarla",
     location: "Belek · Antalya · Turkey"
   },
   de: {
     tag: "Luxus Golf Erlebnisse",
     slogan: "Mehr als nur eine Runde <em>Golf</em>",
     sloganSub: "",
-    cta: "Erlebnis Gestalten",
     location: "Belek · Antalya · Türkei"
   },
   en: {
     tag: "Luxury Golf Experiences",
     slogan: "More than just a <em>round of golf</em>",
     sloganSub: "",
-    cta: "Design Your Experience",
     location: "Belek · Antalya · Turkey"
   },
   ru: {
     tag: "Роскошный Гольф",
     slogan: "Больше, чем просто <em>игра в гольф</em>",
     sloganSub: "",
-    cta: "Создать Опыт",
     location: "Белек · Анталия · Турция"
   }
 };
@@ -289,14 +188,25 @@ langBtns.forEach(btn => {
   btn.addEventListener('click', () => setLang(btn.dataset.lang));
 });
 
-const btn = document.getElementById('btn');
-btn.addEventListener('click', e => {
-  e.preventDefault();
-  btn.style.pointerEvents = 'none';
-  btn.style.opacity = '.7';
-  localStorage.setItem('privelang', document.documentElement.lang);
-  setTimeout(() => { window.location.href = '2.html'; }, 400);
-});
+// Auto-redirect after video ends (or after a set time)
+const video = document.querySelector('video');
+if (video) {
+  video.addEventListener('ended', () => {
+    localStorage.setItem('privelang', document.documentElement.lang);
+    window.location.href = '2.html';
+  });
+  // Fallback: redirect after 8 seconds if video doesn't end
+  setTimeout(() => {
+    localStorage.setItem('privelang', document.documentElement.lang);
+    window.location.href = '2.html';
+  }, 8000);
+} else {
+  // If no video, redirect after animations complete
+  setTimeout(() => {
+    localStorage.setItem('privelang', document.documentElement.lang);
+    window.location.href = '2.html';
+  }, 8000);
+}
 </script>
 </body>
 </html>
