@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BelkaGolf — Tarih & Seçenekler</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a1a10}
+
+.bg-img{position:fixed;inset:0;z-index:0}
+.bg-img img{width:100%;height:100%;object-fit:cover;object-position:center;filter:brightness(.82) saturate(.8)}
+.ov1{position:fixed;inset:0;z-index:1;background:radial-gradient(ellipse at 60% 50%,rgba(0,0,0,.05) 0%,rgba(0,0,0,.48) 100%)}
+.ov2{position:fixed;inset:0;z-index:2;background:linear-gradient(to bottom,rgba(0,0,0,.52) 0%,rgba(0,0,0,0) 40%,rgba(0,0,0,0) 60%,rgba(0,0,0,.52) 100%)}
+
+/* ── TOP BAR ── */
+.top-bar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:28px 48px;display:flex;align-items:center;justify-content:space-between;
+  opacity:0;animation:fadeIn .9s .5s ease forwards;
+}
+.back-btn{
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:400;letter-spacing:.35em;
+  color:rgba(232,213,168,.8);text-decoration:none;text-transform:uppercase;
+  display:flex;align-items:center;gap:10px;transition:color .4s;
+  text-shadow:0 2px 8px rgba(0,0,0,.5);
+}
+.back-btn::before{content:'←';font-size:14px;color:#C9A96E;transition:transform .4s,color .4s}
+.back-btn:hover{color:#F5F1EB}
+.back-btn:hover::before{color:#E8D5A8;transform:translateX(-4px)}
+
+.lang-switcher{display:flex;align-items:center;gap:2px}
+.lang-btn{
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:400;letter-spacing:.15em;
+  color:rgba(245,241,235,.45);background:none;border:none;cursor:pointer;
+  padding:5px 9px;transition:color .35s;text-transform:uppercase;position:relative;
+}
+.lang-btn:hover{color:rgba(232,213,168,.85)}
+.lang-btn.active{color:#E8D5A8;font-weight:500}
+.lang-btn.active::after{
+  content:'';position:absolute;bottom:2px;left:9px;right:9px;
+  height:1px;background:#C9A96E;
+}
+
+/* ── STAGE ── */
+.stage{
+  position:fixed;inset:0;z-index:10;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:60px 24px 40px;overflow-y:auto;
+}
+
+/* ── STEP INDICATOR ── */
+.step-w{
+  display:flex;align-items:center;gap:14px;margin-bottom:16px;
+  opacity:0;animation:fadeIn .9s 1.0s ease forwards;
+}
+.step-circle{
+  width:46px;height:46px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(201,169,110,.5);
+  background:rgba(10,26,16,.4);backdrop-filter:blur(10px);
+  box-shadow:0 4px 20px rgba(0,0,0,.3),0 0 0 1px rgba(201,169,110,.08);
+}
+.step-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:400;color:#E8D5A8;
+  text-shadow:0 2px 8px rgba(0,0,0,.4);
+}
+.step-text{
+  font-family:'Montserrat',sans-serif;font-size:9px;font-weight:500;
+  letter-spacing:.55em;text-transform:uppercase;color:#C9A96E;
+  text-shadow:0 2px 10px rgba(0,0,0,.5);
+}
+
+/* ── LOCATION ── */
+.loc-w{
+  display:flex;flex-direction:column;align-items:center;gap:9px;
+  margin-bottom:20px;opacity:0;animation:riseIn 1s 1.3s ease forwards;
+}
+.loc-orn{display:flex;align-items:center;gap:16px}
+.loc-orn .line{width:44px;height:.5px;background:linear-gradient(to right,transparent,rgba(201,169,110,.5))}
+.loc-orn .line.r{background:linear-gradient(to left,transparent,rgba(201,169,110,.5))}
+.loc-orn .diamond{
+  width:6px;height:6px;background:#C9A96E;transform:rotate(45deg);
+  box-shadow:0 0 10px rgba(201,169,110,.4);
+}
+.loc-brand{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(40px,6.8vw,76px);font-weight:300;
+  letter-spacing:.28em;color:#C9A96E;line-height:1;
+  text-shadow:0 4px 28px rgba(201,169,110,.2),0 1px 4px rgba(0,0,0,.4);
+}
+.loc-welcome{
+  font-family:'Montserrat',sans-serif;
+  font-size:clamp(10px,1.3vw,14px);font-weight:400;letter-spacing:.6em;
+  text-transform:uppercase;color:rgba(245,241,235,.9);
+  text-shadow:0 2px 12px rgba(0,0,0,.5);
+}
+.loc-sub{
+  font-family:'Montserrat',sans-serif;
+  font-size:clamp(8px,.9vw,11px);font-weight:300;letter-spacing:.5em;
+  text-transform:uppercase;color:rgba(232,213,168,.75);
+  text-shadow:0 2px 10px rgba(0,0,0,.5);
+}
+.loc-divider{
+  display:flex;align-items:center;gap:12px;margin:2px 0;
+}
+.loc-divider .d-line{width:32px;height:.5px;background:rgba(201,169,110,.25)}
+.loc-divider .d-dot{width:3px;height:3px;background:rgba(201,169,110,.5);border-radius:50%}
+.loc-tagline{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(14px,1.9vw,22px);font-weight:300;font-style:italic;
+  letter-spacing:.06em;color:rgba(201,169,110,.85);
+  text-shadow:0 2px 16px rgba(0,0,0,.5);
+}
+
+/* ── DATE SECTION ── */
+.date-w{
+  display:flex;flex-direction:column;align-items:center;gap:18px;
+  opacity:0;animation:riseIn 1s 1.9s ease forwards;
+  width:100%;max-width:900px;
+}
+.date-label{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(16px,2.2vw,26px);font-weight:300;font-style:italic;
+  letter-spacing:.04em;color:rgba(245,241,235,.85);
+  text-shadow:0 2px 12px rgba(0,0,0,.5);
+}
+.date-label em{color:#E8D5A8;font-style:italic}
+
+/* ── CONTROLS BAR — HORIZONTAL LUXURY ── */
+.controls-bar{
+  display:flex;align-items:stretch;justify-content:center;
+  gap:0;
+  background:rgba(6,16,10,.58);
+  border:1px solid rgba(201,169,110,.2);
+  backdrop-filter:blur(24px) saturate(1.4);
+  box-shadow:
+    0 8px 48px rgba(0,0,0,.5),
+    0 0 0 1px rgba(201,169,110,.06),
+    inset 0 1px 0 rgba(255,255,255,.04);
+  width:fit-content;max-width:100%;
+  border-radius:2px;
+  overflow:visible;
+}
+
+/* Each control cell */
+.ctrl-item{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:18px 28px;min-width:190px;position:relative;
+  transition:background .35s ease, box-shadow .35s ease;cursor:pointer;
+}
+.ctrl-item:not(:last-child)::after{
+  content:'';position:absolute;right:0;top:18px;bottom:18px;
+  width:1px;background:rgba(201,169,110,.18);
+}
+.ctrl-item:hover{background:rgba(201,169,110,.06)}
+.ctrl-item.has-value{background:rgba(201,169,110,.04)}
+.ctrl-item.has-value::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;
+  height:2px;background:linear-gradient(to right,transparent,rgba(201,169,110,.6),transparent);
+}
+
+.ctrl-label{
+  font-family:'Montserrat',sans-serif;font-size:9px;font-weight:600;
+  letter-spacing:.55em;text-transform:uppercase;color:#C9A96E;
+  margin-bottom:8px;text-shadow:0 1px 6px rgba(0,0,0,.4);
+  user-select:none;
+}
+
+/* Date input inside panel */
+.ctrl-date{
+  font-family:'Montserrat',sans-serif;font-size:14px;font-weight:300;
+  letter-spacing:.04em;color:#F5F1EB;
+  background:transparent;border:none;outline:none;
+  width:100%;cursor:pointer;padding:0;
+  color-scheme:dark;
+}
+.ctrl-date::-webkit-calendar-picker-indicator{
+  filter:invert(.75) sepia(.3) saturate(3) hue-rotate(10deg);
+  cursor:pointer;opacity:.55;transition:opacity .3s;margin-left:6px;
+}
+.ctrl-date::-webkit-calendar-picker-indicator:hover{opacity:.9}
+.ctrl-date:not([value=""]):valid{color:#F5F1EB}
+
+/* Dropdown trigger button */
+.ctrl-trigger{
+  display:flex;align-items:center;justify-content:space-between;
+  width:100%;background:none;border:none;padding:0;cursor:pointer;text-align:left;
+}
+.ctrl-val{
+  font-family:'Montserrat',sans-serif;font-size:14px;font-weight:300;
+  letter-spacing:.04em;color:rgba(245,241,235,.38);
+  transition:color .3s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.ctrl-val.picked{color:#F5F1EB}
+.ctrl-arrow{
+  font-size:10px;color:#C9A96E;opacity:.65;
+  transition:transform .3s ease,opacity .3s;
+  margin-left:10px;flex-shrink:0;
+}
+.ctrl-trigger.open .ctrl-arrow{transform:rotate(180deg);opacity:1}
+
+/* Dropdown panel */
+.ctrl-dropdown{
+  position:absolute;bottom:calc(100% + 6px);left:-1px;right:-1px;z-index:300;
+  background:rgba(5,14,9,.96);border:1px solid rgba(201,169,110,.28);
+  backdrop-filter:blur(24px);
+  box-shadow:0 20px 56px rgba(0,0,0,.6),0 0 0 1px rgba(201,169,110,.06);
+  max-height:0;overflow:hidden;opacity:0;
+  transition:max-height .38s cubic-bezier(.16,1,.3,1),opacity .28s ease;
+  pointer-events:none;
+  border-radius:2px;
+}
+.ctrl-dropdown.open{max-height:260px;opacity:1;pointer-events:all}
+
+.ctrl-opt{
+  font-family:'Montserrat',sans-serif;font-size:12px;font-weight:300;
+  letter-spacing:.2em;color:rgba(245,241,235,.65);
+  padding:14px 24px;cursor:pointer;
+  transition:background .22s,color .22s,padding-left .22s;
+  border-bottom:1px solid rgba(201,169,110,.07);
+  text-transform:uppercase;
+  display:flex;align-items:center;gap:12px;
+}
+.ctrl-opt:last-child{border-bottom:none}
+.ctrl-opt::before{
+  content:'';width:4px;height:4px;flex-shrink:0;
+  border:1px solid rgba(201,169,110,.35);transform:rotate(45deg);
+  transition:background .22s,border-color .22s;
+}
+.ctrl-opt:hover{background:rgba(201,169,110,.08);color:#E8D5A8;padding-left:30px}
+.ctrl-opt:hover::before{background:#C9A96E;border-color:#C9A96E}
+.ctrl-opt.selected{color:#C9A96E;background:rgba(201,169,110,.06)}
+.ctrl-opt.selected::before{background:#C9A96E;border-color:#C9A96E}
+
+/* filter/hotel ctrl special width */
+.ctrl-item.filter-ctrl{min-width:170px}
+.ctrl-item.filter-ctrl .ctrl-dropdown{min-width:220px;right:auto}
+
+/* ── CTA ROW ── */
+.cta-row{
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  margin-top:4px;width:100%;
+}
+.btn-cta{
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:500;letter-spacing:.55em;
+  text-transform:uppercase;color:#E8D5A8;
+  background:rgba(10,26,16,.2);padding:20px 64px;
+  border:1px solid rgba(201,169,110,.38);
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:color .55s cubic-bezier(.16,1,.3,1),letter-spacing .55s cubic-bezier(.16,1,.3,1),border-color .4s;
+  backdrop-filter:blur(4px);
+  text-shadow:0 2px 8px rgba(0,0,0,.3);
+  display:flex;align-items:center;gap:14px;
+  border-radius:2px;
+}
+.btn-cta::before{
+  content:'';position:absolute;inset:0;
+  background:#C9A96E;transform:scaleX(0);transform-origin:left;
+  transition:transform .55s cubic-bezier(.16,1,.3,1);z-index:0;
+}
+.btn-cta span,.btn-cta .cta-arrow{position:relative;z-index:1}
+.btn-cta .cta-arrow{font-size:12px;opacity:.7;transition:transform .4s,opacity .3s}
+.btn-cta:hover{color:#0a1a10;border-color:#C9A96E;letter-spacing:.68em}
+.btn-cta:hover::before{transform:scaleX(1)}
+.btn-cta:hover .cta-arrow{transform:translateX(4px);opacity:1}
+.btn-cta:active{transform:scale(.98)}
+
+/* ── BOTTOM BAR ── */
+.bottom-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:20;
+  padding:16px 48px;display:flex;justify-content:center;
+  opacity:0;animation:fadeIn .9s 3.2s ease forwards;
+}
+.bottom-bar span{
+  font-family:'Montserrat',sans-serif;font-size:9px;font-weight:400;
+  letter-spacing:.45em;text-transform:uppercase;
+  color:rgba(232,213,168,.6);text-shadow:0 2px 10px rgba(0,0,0,.4);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── TABLET ── */
+@media (max-width: 900px) {
+  .controls-bar{
+    display:grid;grid-template-columns:1fr 1fr;
+    width:100%;max-width:560px;
+  }
+  .ctrl-item{min-width:0;padding:18px 24px}
+  .ctrl-item:not(:last-child)::after{display:none}
+  /* right-column cells get left border */
+  .ctrl-item:nth-child(2n)::before{
+    content:'';position:absolute;left:0;top:12px;bottom:12px;
+    width:1px;background:rgba(201,169,110,.18);
+  }
+  .ctrl-item.has-value::before{
+    background:none;height:2px;bottom:0;top:auto;left:0;right:0;width:auto;
+    background:linear-gradient(to right,transparent,rgba(201,169,110,.6),transparent);
+  }
+  /* bottom borders for top row */
+  .ctrl-item:nth-child(-n+2){
+    border-bottom:1px solid rgba(201,169,110,.15);
+  }
+  .ctrl-item.filter-ctrl{min-width:0}
+  .ctrl-item.filter-ctrl .ctrl-dropdown{min-width:0;right:-1px}
+}
+
+/* ── MOBILE ── */
+@media (max-width: 600px) {
+  .top-bar{padding:14px 18px}
+  .back-btn{font-size:9px;gap:8px}
+  .lang-btn{font-size:9px;padding:4px 7px}
+
+  .step-w{margin-bottom:18px}
+  .step-circle{width:40px;height:40px}
+  .step-num{font-size:18px}
+  .step-text{font-size:8px;letter-spacing:.4em}
+
+  .loc-w{gap:7px;margin-bottom:24px}
+  .loc-orn .line{width:30px}
+  .loc-brand{font-size:clamp(30px,11vw,54px);letter-spacing:.18em}
+  .loc-welcome{font-size:clamp(9px,2.5vw,12px);letter-spacing:.4em}
+  .loc-sub{font-size:8px;letter-spacing:.35em}
+  .loc-tagline{font-size:clamp(13px,3.2vw,17px)}
+
+  .date-w{gap:16px}
+  .date-label{font-size:clamp(14px,3.5vw,19px)}
+
+  .controls-bar{
+    display:flex;flex-direction:column;
+    width:100%;max-width:320px;
+  }
+  .ctrl-item{min-width:0;padding:14px 20px}
+  .ctrl-item:not(:last-child)::after{
+    display:block;top:auto;bottom:0;left:16px;right:16px;
+    width:auto;height:1px;background:rgba(201,169,110,.15);
+  }
+  .ctrl-item:nth-child(2n)::before{display:none}
+  .ctrl-item:nth-child(-n+2){border-bottom:none}
+  .ctrl-val,.ctrl-date{font-size:14px}
+  .ctrl-item.filter-ctrl .ctrl-dropdown{right:-1px}
+
+  .btn-cta{padding:18px 48px;font-size:10px;letter-spacing:.45em;width:100%;max-width:320px;justify-content:center}
+  .bottom-bar{padding:18px 20px}
+}
+@media (max-width: 380px) {
+  .loc-brand{font-size:clamp(24px,9.5vw,42px)}
+  .ctrl-item{padding:13px 16px}
+  .btn-cta{padding:16px 36px}
+}
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<div class="bg-img"><img src="2.webp" alt="BelkaGolf Belek"></div>
+<div class="ov1"></div>
+<div class="ov2"></div>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <a class="back-btn" href="intro.html" data-i18n="back">Geri</a>
+  <div class="lang-switcher">
+    <button class="lang-btn active" data-lang="tr">TR</button>
+    <button class="lang-btn" data-lang="de">DE</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="ru">RU</button>
+  </div>
+</div>
+
+<!-- MAIN STAGE -->
+<div class="stage">
+
+  <!-- Step -->
+  <div class="step-w">
+    <div class="step-circle"><span class="step-num">1</span></div>
+    <div class="step-text" data-i18n="stepLabel">Rezervasyon</div>
+  </div>
+
+  <!-- Location -->
+  <div class="loc-w">
+    <div class="loc-orn">
+      <div class="line"></div>
+      <div class="diamond"></div>
+      <div class="line r"></div>
+    </div>
+    <div class="loc-brand">BELKAGOLF</div>
+    <div class="loc-welcome" data-i18n="locWelcome">BELEK'E HOŞ GELDİNİZ</div>
+    <div class="loc-sub" data-i18n="locSub">Antalya · Turkish Riviera</div>
+    <div class="loc-divider">
+      <div class="d-line"></div><div class="d-dot"></div><div class="d-line"></div>
+    </div>
+    <div class="loc-tagline" data-i18n="locTagline">Bir Golf Oyunundan Çok Daha Fazlası</div>
+  </div>
+
+  <!-- Date & Selection Area -->
+  <div class="date-w">
+    <div class="date-label" data-i18n="dateLabel">Lütfen Gelmek İstediğiniz <em>Tarihleri Seçiniz</em></div>
+
+    <!-- ── CONTROLS BAR: 4 cells in one row ── -->
+    <div class="controls-bar">
+
+      <!-- 1. Giriş Tarihi -->
+      <div class="ctrl-item" id="checkInCtrl">
+        <div class="ctrl-label" data-i18n="checkInLabel">Giriş Tarihi</div>
+        <input class="ctrl-date" type="date" id="checkIn">
+      </div>
+
+      <!-- 2. Gün Sayısı -->
+      <div class="ctrl-item" id="nightsCtrl">
+        <div class="ctrl-label" data-i18n="nightsLabel">Gün Sayısı</div>
+        <button class="ctrl-trigger" id="nightsBtn" type="button" onclick="toggleSel('nights')">
+          <span class="ctrl-val" id="nightsVal" data-i18n="nightsPlaceholder">Gün Seçin</span>
+          <span class="ctrl-arrow">▾</span>
+        </button>
+        <div class="ctrl-dropdown" id="nightsOpts">
+          <div class="ctrl-opt" data-val="3" data-i18n-opt="nights3">3 Gece</div>
+          <div class="ctrl-opt" data-val="5" data-i18n-opt="nights5">5 Gece</div>
+          <div class="ctrl-opt" data-val="6" data-i18n-opt="nights6">6 Gece</div>
+          <div class="ctrl-opt" data-val="7" data-i18n-opt="nights7">7 Gece</div>
+        </div>
+      </div>
+
+      <!-- 3. Oyun Sayısı -->
+      <div class="ctrl-item" id="roundsCtrl">
+        <div class="ctrl-label" data-i18n="roundsLabel">Oyun Sayısı</div>
+        <button class="ctrl-trigger" id="roundsBtn" type="button" onclick="toggleSel('rounds')">
+          <span class="ctrl-val" id="roundsVal" data-i18n="roundsPlaceholder">Round Seçin</span>
+          <span class="ctrl-arrow">▾</span>
+        </button>
+        <div class="ctrl-dropdown" id="roundsOpts">
+          <div class="ctrl-opt" data-val="2">2 Rounds</div>
+          <div class="ctrl-opt" data-val="3">3 Rounds</div>
+          <div class="ctrl-opt" data-val="4">4 Rounds</div>
+          <div class="ctrl-opt" data-val="unlimited" data-i18n-opt="roundsUnlimited">Unlimited Rounds</div>
+        </div>
+      </div>
+
+      <!-- 4. Otel Seç -->
+      <div class="ctrl-item filter-ctrl" id="hotelCtrl">
+        <div class="ctrl-label" data-i18n="hotelLabel">Otel</div>
+        <button class="ctrl-trigger" id="hotelBtn" type="button" onclick="toggleHotel()">
+          <span class="ctrl-val" id="hotelVal" data-i18n="hotelPlaceholder">Otel Seç</span>
+          <span class="ctrl-arrow">▾</span>
+        </button>
+        <div class="ctrl-dropdown" id="hotelOpts">
+          <div class="ctrl-opt" data-val="any" data-i18n-opt="hotelAny">Herhangi Bir Otel</div>
+          <div class="ctrl-opt" data-val="select" data-i18n-opt="hotelChoose">Otel Seç</div>
+        </div>
+      </div>
+
+    </div><!-- /controls-bar -->
+
+    <!-- CTA -->
+    <div class="cta-row">
+      <button class="btn-cta" id="btnContinue" type="button">
+        <span data-i18n="continue">Devam Et</span>
+        <span class="cta-arrow">→</span>
+      </button>
+    </div>
+
+  </div><!-- /date-w -->
+</div><!-- /stage -->
+
+<div class="bottom-bar">
+  <span data-i18n="footer">BelkaGolf Belek — Lüks Golf Deneyimleri</span>
+</div>
+
+<script>
+const translations = {
+  tr:{
+    back:"Geri", stepLabel:"Rezervasyon",
+    locWelcome:"BELEK'E HOŞ GELDİNİZ", locSub:"Antalya · Turkish Riviera",
+    locTagline:"Bir Golf Oyunundan Çok Daha Fazlası",
+    dateLabel:"Lütfen Gelmek İstediğiniz <em>Tarihleri Seçiniz</em>",
+    checkInLabel:"Giriş Tarihi",
+    nightsLabel:"Gün Sayısı", nightsPlaceholder:"Gün Seçin",
+    nights3:"3 Gece", nights5:"5 Gece", nights6:"6 Gece", nights7:"7 Gece",
+    roundsLabel:"Oyun Sayısı", roundsPlaceholder:"Round Seçin",
+    roundsUnlimited:"Sınırsız Round",
+        hotelLabel:"Otel", hotelPlaceholder:"Otel Seç",
+    hotelAny:"Herhangi Bir Otel", hotelChoose:"Otel Seç",
+    continue:"Devam Et", footer:"BelkaGolf Belek — Lüks Golf Deneyimleri",
+    errDate:"Lütfen giriş tarihi seçin",
+    errNights:"Lütfen gün sayısı seçin",
+    errRounds:"Lütfen oyun sayısı seçin"
+  },
+  de:{
+    back:"Zurück", stepLabel:"Reservierung",
+    locWelcome:"WILLKOMMEN IN BELEK", locSub:"Antalya · Türkische Riviera",
+    locTagline:"Mehr als nur Golf",
+    dateLabel:"Bitte wählen Sie Ihre <em>gewünschten Daten</em>",
+    checkInLabel:"Anreisedatum",
+    nightsLabel:"Nächte", nightsPlaceholder:"Nächte wählen",
+    nights3:"3 Nächte", nights5:"5 Nächte", nights6:"6 Nächte", nights7:"7 Nächte",
+    roundsLabel:"Runden", roundsPlaceholder:"Runden wählen",
+    roundsUnlimited:"Unbegrenzte Runden",
+        hotelLabel:"Hotel", hotelPlaceholder:"Hotel Wählen",
+    hotelAny:"Beliebiges Hotel", hotelChoose:"Hotel Auswählen",
+    continue:"Weiter", footer:"BelkaGolf Belek — Luxus Golf Erlebnisse",
+    errDate:"Bitte Anreisedatum wählen",
+    errNights:"Bitte Nächte wählen",
+    errRounds:"Bitte Runden wählen"
+  },
+  en:{
+    back:"Back", stepLabel:"Reservation",
+    locWelcome:"WELCOME TO BELEK", locSub:"Antalya · Turkish Riviera",
+    locTagline:"More Than Just a Golf Game",
+    dateLabel:"Please Select Your <em>Preferred Dates</em>",
+    checkInLabel:"Check-in Date",
+    nightsLabel:"Nights", nightsPlaceholder:"Select Nights",
+    nights3:"3 Nights", nights5:"5 Nights", nights6:"6 Nights", nights7:"7 Nights",
+    roundsLabel:"Rounds", roundsPlaceholder:"Select Rounds",
+    roundsUnlimited:"Unlimited Rounds",
+        hotelLabel:"Hotel", hotelPlaceholder:"Select Hotel",
+    hotelAny:"Any Hotel", hotelChoose:"Choose Hotel",
+    continue:"Continue", footer:"BelkaGolf Belek — Luxury Golf Experiences",
+    errDate:"Please select a check-in date",
+    errNights:"Please select number of nights",
+    errRounds:"Please select number of rounds"
+  },
+  ru:{
+    back:"Назад", stepLabel:"Бронирование",
+    locWelcome:"ДОБРО ПОЖАЛОВАТЬ В БЕЛЕК", locSub:"Анталия · Турецкая Ривьера",
+    locTagline:"Больше, чем просто гольф",
+    dateLabel:"Пожалуйста, выберите <em>желаемые даты</em>",
+    checkInLabel:"Дата заезда",
+    nightsLabel:"Ночей", nightsPlaceholder:"Выбрать ночи",
+    nights3:"3 ночи", nights5:"5 ночей", nights6:"6 ночей", nights7:"7 ночей",
+    roundsLabel:"Раунды", roundsPlaceholder:"Выбрать раунды",
+    roundsUnlimited:"Безлимитные раунды",
+        hotelLabel:"Отель", hotelPlaceholder:"Выбрать Отель",
+    hotelAny:"Любой Отель", hotelChoose:"Выбрать Отель",
+    continue:"Продолжить", footer:"BelkaGolf Белек — Роскошный Гольф",
+    errDate:"Выберите дату заезда",
+    errNights:"Выберите количество ночей",
+    errRounds:"Выберите количество раундов"
+  }
+};
+
+let currentLang = 'tr';
+let selectedNights = null;
+let selectedRounds = null;
+let selectedSort = null;
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  const t = translations[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = t[el.dataset.i18n];
+    if (v !== undefined) el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-i18n-opt]').forEach(el => {
+    const v = t[el.dataset.i18nOpt];
+    if (v !== undefined) el.textContent = v;
+  });
+  // Re-apply selected display text after language switch
+  if (selectedNights) refreshVal('nights', `#nightsOpts .ctrl-opt[data-val="${selectedNights}"]`);
+  if (selectedRounds) refreshVal('rounds', `#roundsOpts .ctrl-opt[data-val="${selectedRounds}"]`);
+  document.documentElement.lang = lang;
+  localStorage.setItem('privelang', lang);
+}
+
+function refreshVal(which, selector) {
+  const opt = document.querySelector(selector);
+  if (opt) setVal(which, opt.textContent.trim());
+}
+
+function setVal(which, text) {
+  const span = document.getElementById(which + 'Val');
+  span.textContent = text;
+  span.classList.add('picked');
+  document.getElementById(which + 'Ctrl').classList.add('has-value');
+}
+
+document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+
+/* ── Dropdown logic ── */
+function toggleSel(which) {
+  const btn  = document.getElementById(which + 'Btn');
+  const opts = document.getElementById(which + 'Opts');
+  const was  = opts.classList.contains('open');
+  closeAll();
+  if (!was) { btn.classList.add('open'); opts.classList.add('open'); }
+}
+
+function closeAll() {
+  document.querySelectorAll('.ctrl-trigger').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.ctrl-dropdown').forEach(o => o.classList.remove('open'));
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.ctrl-item')) closeAll();
+});
+
+/* ── Nights ── */
+document.querySelectorAll('#nightsOpts .ctrl-opt').forEach(opt => {
+  opt.addEventListener('click', () => {
+    selectedNights = opt.dataset.val;
+    document.querySelectorAll('#nightsOpts .ctrl-opt').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+    setVal('nights', opt.textContent.trim());
+    closeAll();
+  });
+});
+
+/* ── Rounds ── */
+document.querySelectorAll('#roundsOpts .ctrl-opt').forEach(opt => {
+  opt.addEventListener('click', () => {
+    selectedRounds = opt.dataset.val;
+    document.querySelectorAll('#roundsOpts .ctrl-opt').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+    setVal('rounds', opt.textContent.trim());
+    closeAll();
+  });
+});
+
+/* ── Hotel Selector ── */
+let selectedHotel = null;
+
+function toggleHotel() {
+  const btn = document.getElementById('hotelBtn');
+  const opts = document.getElementById('hotelOpts');
+  const was = opts.classList.contains('open');
+  closeAll();
+  if (!was) { btn.classList.add('open'); opts.classList.add('open'); }
+}
+
+document.querySelectorAll('#hotelOpts .ctrl-opt').forEach(opt => {
+  opt.addEventListener('click', () => {
+    selectedHotel = opt.dataset.val;
+    document.querySelectorAll('#hotelOpts .ctrl-opt').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+    const span = document.getElementById('hotelVal');
+    span.textContent = opt.textContent.trim();
+    span.classList.add('picked');
+    document.getElementById('hotelCtrl').classList.add('has-value');
+    // If "Otel Seç" chosen, redirect to page4.html
+    if (selectedHotel === 'select') {
+      setTimeout(() => window.location.href = 'page4.html', 300);
+    }
+    closeAll();
+  });
+});
+
+/* ── Check-in: mark ctrl filled on change ── */
+const checkIn = document.getElementById('checkIn');
+const today   = new Date().toISOString().split('T')[0];
+checkIn.min   = today;
+checkIn.addEventListener('change', () => {
+  document.getElementById('checkInCtrl').classList.toggle('has-value', !!checkIn.value);
+});
+
+/* ── Continue ── */
+document.getElementById('btnContinue').addEventListener('click', () => {
+  const t = translations[currentLang];
+  if (!checkIn.value)    { alert(t.errDate);   return; }
+  if (!selectedNights)   { alert(t.errNights);  return; }
+  if (!selectedRounds)   { alert(t.errRounds);  return; }
+  localStorage.setItem('priveCheckIn', checkIn.value);
+  localStorage.setItem('priveNights',  selectedNights);
+  localStorage.setItem('priveRounds',  selectedRounds);
+
+  const btn = document.getElementById('btnContinue');
+  btn.style.pointerEvents = 'none';
+  btn.style.opacity = '.5';
+  setTimeout(() => window.location.href = 'page8.html', 500);
+});
+
+/* ── Init ── */
+setLang(localStorage.getItem('privelang') || 'tr');
+
+// ── Restore all saved selections from localStorage ──
+
+// 1. Check-in Date
+const savedCheckIn = localStorage.getItem('priveCheckIn');
+if (savedCheckIn) {
+  const checkInInput = document.getElementById('checkIn');
+  checkInInput.value = savedCheckIn;
+  document.getElementById('checkInCtrl').classList.add('has-value');
+}
+
+// 2. Nights (Gün Sayısı)
+const savedNights = localStorage.getItem('priveNights');
+if (savedNights) {
+  selectedNights = savedNights;
+  const nightsOpt = document.querySelector(`#nightsOpts .ctrl-opt[data-val="${savedNights}"]`);
+  if (nightsOpt) {
+    nightsOpt.classList.add('selected');
+    setVal('nights', nightsOpt.textContent.trim());
+  }
+}
+
+// 3. Rounds (Oyun Sayısı)
+const savedRounds = localStorage.getItem('priveRounds');
+if (savedRounds) {
+  selectedRounds = savedRounds;
+  const roundsOpt = document.querySelector(`#roundsOpts .ctrl-opt[data-val="${savedRounds}"]`);
+  if (roundsOpt) {
+    roundsOpt.classList.add('selected');
+    setVal('rounds', roundsOpt.textContent.trim());
+  }
+}
+
+// 4. Hotel (Otel Seç)
+const savedHotel = localStorage.getItem('priveHotel');
+if (savedHotel) {
+  selectedHotel = savedHotel;
+  const hotelNames = {
+    'regnum': 'Regnum Carya',
+    'cornelia': 'Cornelia Diamond',
+    'gloria': 'Gloria Serenity',
+    'kaya': 'Kaya Palazzo',
+    'sueno-deluxe': 'Sueno Hotels Deluxe',
+    'sueno-golf': 'Sueno Hotels Golf',
+    'titanic': 'Titanic Deluxe Golf',
+    'maxxroyal': 'Maxx Royal Belek',
+    'sirene': 'Sirene Belek',
+    'kempinski': 'Kempinski The Dome',
+    'lykia': 'Lykia World Antalya',
+    'voyage': 'Voyage Belek Golf',
+    'gloria-golf': 'Gloria Golf Resort',
+    'cullinan': 'Cullinan Golf Resort',
+    'gloria-verde': 'Gloria Verde Resort',
+    'kaya-belek': 'Kaya Belek Hotel'
+  };
+  const hotelName = hotelNames[savedHotel] || savedHotel;
+  const hotelVal = document.getElementById('hotelVal');
+  if (hotelVal) {
+    hotelVal.textContent = hotelName;
+    hotelVal.classList.add('picked');
+    document.getElementById('hotelCtrl').classList.add('has-value');
+  }
+  // Also mark the hotel option as selected
+  const hotelOpt = document.querySelector(`#hotelOpts .ctrl-opt[data-val="${savedHotel === 'any' ? 'any' : 'select'}"]`);
+  if (hotelOpt) hotelOpt.classList.add('selected');
+}
+</script>
+</body>
+</html>

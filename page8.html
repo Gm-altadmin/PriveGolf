@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BelkaGolf — Deneyim Özeti</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;min-height:100%;background:#060f09;font-family:'Montserrat',sans-serif}
+body{overflow-y:auto;overflow-x:hidden}
+
+.bg{position:fixed;inset:0;z-index:0}
+.bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.35) saturate(.8)}
+.ov{position:fixed;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(0,0,0,.8) 0%,rgba(0,0,0,.3) 30%,rgba(0,0,0,.2) 60%,rgba(0,0,0,.85) 100%)}
+
+/* ── TOP BAR ── */
+.top-bar{position:sticky;top:0;left:0;right:0;z-index:200;padding:16px 44px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;opacity:0;animation:fadeIn 1s .4s ease forwards;background:rgba(6,15,9,.7);backdrop-filter:blur(12px)}
+.back-btn{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:400;letter-spacing:.25em;color:rgba(232,213,168,.75);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:8px;transition:color .3s;justify-self:start;white-space:nowrap}
+.back-btn::before{content:'←';font-size:14px;color:#C9A96E;transition:transform .3s}
+.back-btn:hover{color:#F5F1EB}
+.back-btn:hover::before{transform:translateX(-4px)}
+.step-w{display:flex;flex-direction:column;align-items:center;gap:6px;justify-self:center}
+.step-circle{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(201,169,110,.5);background:rgba(6,15,9,.55);backdrop-filter:blur(10px)}
+.step-num{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:#E8D5A8}
+.step-label{font-family:'Montserrat',sans-serif;font-size:8px;font-weight:400;letter-spacing:.4em;text-transform:uppercase;color:#C9A96E;white-space:nowrap;text-align:center}
+.lang-switcher{display:flex;align-items:center;gap:2px;justify-self:end}
+.lang-btn{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:400;letter-spacing:.12em;color:rgba(245,241,235,.4);background:none;border:none;cursor:pointer;padding:4px 6px;transition:color .3s;text-transform:uppercase;position:relative}
+.lang-btn:hover{color:rgba(232,213,168,.8)}
+.lang-btn.active{color:#E8D5A8;font-weight:500}
+.lang-btn.active::after{content:'';position:absolute;bottom:1px;left:7px;right:7px;height:.5px;background:#C9A96E}
+
+/* ── HEADER ── */
+.hdr{position:relative;z-index:10;text-align:center;opacity:0;animation:fadeIn 1s .9s ease forwards;padding:20px 0 10px}
+.hdr-title{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3.8vw,44px);font-weight:300;letter-spacing:.12em;color:#F5F1EB;text-shadow:0 4px 28px rgba(0,0,0,.8);line-height:1.15}
+.hdr-title em{color:#C9A96E;font-style:italic}
+.hdr-sub{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:300;letter-spacing:.45em;text-transform:uppercase;color:rgba(232,213,168,.75);margin-top:9px;text-shadow:0 2px 14px rgba(0,0,0,.8)}
+
+/* ── CONTENT ── */
+.content-wrap{position:relative;z-index:10;padding-top:20px;padding-bottom:160px}
+.neon-wall{position:relative;margin:0 auto 30px;max-width:900px;padding:0 24px}
+.wall-frame{position:relative;border:1px solid rgba(201,169,110,.2);border-radius:4px;background:rgba(8,20,12,.9);overflow:hidden;box-shadow:0 0 40px rgba(201,169,110,.08)}
+.wall-header{text-align:center;padding:24px 16px 16px;border-bottom:1px solid rgba(201,169,110,.12)}
+.wall-title{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,3.2vw,28px);font-weight:400;letter-spacing:.1em;color:#F5F1EB}
+.wall-title em{color:#C9A96E;font-style:italic}
+.wall-sub{font-family:'Montserrat',sans-serif;font-size:7px;letter-spacing:.35em;text-transform:uppercase;color:rgba(201,169,110,.5);margin-top:6px}
+.neon-strip{height:2px;background:linear-gradient(90deg,transparent 0%,#C9A96E 20%,#E8D5A8 50%,#C9A96E 80%,transparent 100%);opacity:.7}
+
+/* ── SUMMARY SECTIONS ── */
+.sum-section{padding:20px 28px;border-bottom:1px solid rgba(201,169,110,.08)}
+.sum-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sum-label{display:flex;align-items:center;gap:10px}
+.sum-icon{width:32px;height:32px;border-radius:50%;background:rgba(201,169,110,.1);border:1px solid rgba(201,169,110,.25);display:flex;align-items:center;justify-content:center;font-size:14px;color:#C9A96E;font-family:'Cormorant Garamond',serif}
+.sum-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:400;color:#F5F1EB;letter-spacing:.06em}
+.sum-edit-btn{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#C9A96E;background:transparent;border:1px solid rgba(201,169,110,.3);padding:8px 16px;cursor:pointer;border-radius:2px;transition:all .3s}
+.sum-edit-btn:hover{background:rgba(201,169,110,.1);border-color:rgba(201,169,110,.5)}
+.sum-content{padding-left:42px}
+.sum-item{display:flex;align-items:center;gap:10px;padding:9px 0;font-size:13px;color:rgba(245,241,235,.8);line-height:1.5}
+.sum-item strong{color:#E8D5A8;font-weight:400}
+.sum-item-dot{width:5px;height:5px;border-radius:50%;background:#C9A96E;flex-shrink:0}
+.sum-hotel-img{width:100%;max-width:280px;height:160px;border-radius:4px;overflow:hidden;border:1px solid rgba(201,169,110,.15);margin-bottom:12px;background:rgba(255,255,255,0.05)}
+.sum-hotel-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.85)}
+
+/* ── FINAL SUBMIT ── */
+.final-submit-w{position:fixed;bottom:0;left:0;right:0;z-index:100;padding:20px;background:linear-gradient(to top,rgba(6,15,9,1),transparent)}
+.btn-main-confirm{width:100%;max-width:900px;margin:0 auto;display:block;padding:18px;background:#C9A96E;color:#060f09;border:none;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.4em;text-transform:uppercase;cursor:pointer;transition:all .3s;border-radius:2px}
+.btn-main-confirm:hover{background:#E8D5A8;transform:translateY(-2px)}
+
+/* ── SUCCESS OVERLAY ── */
+.success-ov{position:fixed;inset:0;z-index:600;background:#000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .5s}
+.success-ov.open{opacity:1;pointer-events:all}
+.success-msg-overlay{position:absolute;inset:0;z-index:10;background:rgba(0,0,0,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;opacity:0;transition:opacity 1s ease .5s}
+.success-msg-overlay.show{opacity:1}
+.success-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,44px);font-weight:300;letter-spacing:.1em;color:#F5F1EB;margin-bottom:16px}
+.success-title em{color:#C9A96E;font-style:italic}
+.success-text{font-family:'Montserrat',sans-serif;font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:#E8D5A8}
+.success-actions{margin-top:30px;display:flex;gap:15px;opacity:0;transition:opacity .8s ease 1s}
+.success-actions.show{opacity:1}
+.btn-final{font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;padding:14px 25px;border-radius:2px;text-decoration:none;transition:all .3s}
+.btn-final.primary{background:#C9A96E;color:#060f09}
+.btn-final.secondary{border:1px solid rgba(201,169,110,.4);color:#C9A96E;background:rgba(201,169,110,.05)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ── CONTACT MODAL ── */
+.contact-ov{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s ease}
+.contact-ov.open{opacity:1;pointer-events:all}
+.contact-box{width:min(480px,90vw);background:rgba(8,20,12,.97);border:1px solid rgba(201,169,110,.22);border-radius:4px;padding:36px 32px 28px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 0 1px rgba(201,169,110,.06)}
+.contact-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:rgba(201,169,110,.12);border:.5px solid rgba(201,169,110,.3);color:#C9A96E;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.contact-close:hover{background:rgba(201,169,110,.25);color:#E8D5A8}
+.contact-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;letter-spacing:.08em;color:#F5F1EB;text-align:center;margin-bottom:4px}
+.contact-title em{color:#C9A96E;font-style:italic}
+.contact-sub{font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:.35em;text-transform:uppercase;color:rgba(201,169,110,.5);text-align:center;margin-bottom:28px}
+.contact-options{display:flex;flex-direction:column;gap:12px}
+.contact-option{display:flex;align-items:center;gap:14px;border:1px solid rgba(201,169,110,.15);border-radius:3px;padding:18px 20px;cursor:pointer;transition:all .3s;background:rgba(14,30,18,.4);text-decoration:none}
+.contact-option:hover{border-color:rgba(201,169,110,.45);background:rgba(201,169,110,.08);transform:translateY(-1px)}
+.contact-option-icon{font-size:22px;flex-shrink:0}
+.contact-option-text{font-size:13px;color:rgba(245,241,235,.8);line-height:1.5}
+.contact-option-text strong{display:block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#C9A96E;margin-bottom:4px;font-weight:500;font-family:'Montserrat',sans-serif}
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  .top-bar{padding:12px 14px}
+  .back-btn{font-size:8px;letter-spacing:.15em;gap:4px}
+  .step-circle{width:36px;height:36px}
+  .step-num{font-size:18px}
+  .step-label{font-size:8px;letter-spacing:.25em}
+  .lang-btn{font-size:8px;padding:6px 5px}
+  .hdr-title{font-size:clamp(20px,5vw,30px)}
+  .hdr-sub{font-size:8px;letter-spacing:.35em}
+  .content-wrap{padding-top:10px;padding-bottom:120px}
+  .sum-section{padding:18px 20px}
+  .sum-content{padding-left:0}
+  .sum-item{font-size:12px;padding:8px 0}
+  .sum-title{font-size:16px}
+  .sum-hotel-img{max-width:100%;height:160px}
+  .sum-edit-btn{padding:7px 12px;font-size:8px}
+  .contact-option-text{font-size:12px}
+  .contact-option-text strong{font-size:10px}
+}
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<div class="bg"><img src="8.webp" alt="BelkaGolf"></div>
+<div class="ov"></div>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <a href="2.html" class="back-btn" data-i18n="back">Geri</a>
+  <div class="step-w">
+    <div class="step-circle"><span class="step-num">2</span></div>
+    <div class="step-label" data-i18n="stepLabel">Deneyim Özeti</div>
+  </div>
+  <div class="lang-switcher">
+    <button class="lang-btn active" data-lang="tr">TR</button>
+    <button class="lang-btn" data-lang="de">DE</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="ru">RU</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <h1 class="hdr-title">BelkaGolf <em data-i18n="hdrTitle">Deneyim Özeti</em></h1>
+  <div class="hdr-sub" data-i18n="hdrSub">Privé Belek Deneyimi</div>
+</div>
+
+<!-- CONTENT -->
+<div class="content-wrap">
+  <div class="neon-wall">
+    <div class="wall-frame">
+      <div class="wall-header">
+        <div class="wall-title" data-i18n="wallTitle">Kişiye Özel <em>Seyahat Paketi</em></div>
+        <div class="wall-sub" data-i18n="wallSub">BelkaGolf Belek</div>
+      </div>
+      <div class="neon-strip"></div>
+      <div id="summaryContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL SUBMIT -->
+<div class="final-submit-w">
+  <button class="btn-main-confirm" onclick="openContactModal()" data-i18n="btnConfirm">Onayla ve Teklif Al</button>
+</div>
+
+<!-- CONTACT MODAL -->
+<div class="contact-ov" id="contactOv">
+  <div class="contact-box">
+    <button class="contact-close" onclick="closeContactModal()">✕</button>
+    <div class="contact-title" data-i18n="contactTitle">Teklif <em>Alın</em></div>
+    <div class="contact-sub" data-i18n="contactSub">Size Nasıl Ulaşalım?</div>
+    <div class="contact-options">
+      <a href="#" class="contact-option" id="optWhatsapp" onclick="sendToWhatsapp(event)">
+        <div class="contact-option-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" fill="#25D366"/></svg></div>
+        <div class="contact-option-text">
+          <strong data-i18n="whatsappTitle">7/24 Canlı Destek</strong>
+          <span data-i18n="whatsappDesc">WhatsApp üzerinden teklif alın</span>
+        </div>
+      </a>
+      <a href="#" class="contact-option" id="optEmail" onclick="sendToEmail(event)">
+        <div class="contact-option-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="#C9A96E"/></svg></div>
+        <div class="contact-option-text">
+          <strong data-i18n="emailTitle">E-Posta</strong>
+          <span data-i18n="emailDesc">Teklifi e-posta ile alın</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Translations ──
+const translations = {
+  tr: {
+    back: "Geri", stepLabel: "Deneyim Özeti",
+    hdrTitle: "Deneyim Özeti", hdrSub: "Privé Belek Deneyimi",
+    wallTitle: "Kişiye Özel <em>Seyahat Paketi</em>", wallSub: "BelkaGolf Belek",
+    sectionDate: "Tarih ve Detaylar", sectionHotel: "Konaklama",
+    sectionGolf: "Golf Programı",
+    checkIn: "Giriş Tarihi", nights: "Gece Sayısı", rounds: "Round Sayısı",
+    hotel: "Otel", anyHotel: "Herhangi Bir Otel", selectedHotel: "Seçilen Otel",
+    edit: "Düzenle", notSelected: "Seçilmedi",
+    btnConfirm: "Onayla ve Teklif Al",
+    contactTitle: "Teklif <em>Alın</em>", contactSub: "Size Nasıl Ulaşalım?",
+    whatsappTitle: "7/24 Canlı Destek", whatsappDesc: "WhatsApp üzerinden teklif alın",
+    emailTitle: "E-Posta", emailDesc: "Teklifi e-posta ile alın",
+    successTitle: "Talebiniz <em>Alındı</em>", successText: "24 Saat içerisinde teklifimiz iletilecektir",
+    btnHome: "Ana Sayfaya Dön", btnAbout: "Biz Kimiz?",
+    nightSingular: "Gece", nightPlural: "Gece",
+    roundSingular: "Round", roundPlural: "Round"
+  },
+  de: {
+    back: "Zurück", stepLabel: "Erlebnisübersicht",
+    hdrTitle: "Erlebnisübersicht", hdrSub: "Privé Belek Erlebnis",
+    wallTitle: "Ihr <em>Persönliches Reisepaket</em>", wallSub: "BelkaGolf Belek",
+    sectionDate: "Datum & Details", sectionHotel: "Unterkunft",
+    sectionGolf: "Golf Programm",
+    checkIn: "Anreisedatum", nights: "Nächte", rounds: "Runden",
+    hotel: "Hotel", anyHotel: "Beliebiges Hotel", selectedHotel: "Ausgewähltes Hotel",
+    edit: "Bearbeiten", notSelected: "Nicht ausgewählt",
+    btnConfirm: "Bestätigen & Angebot Erhalten",
+    contactTitle: "Angebot <em>Erhalten</em>", contactSub: "Wie sollen wir Sie erreichen?",
+    whatsappTitle: "7/24 Live Support", whatsappDesc: "Angebot über WhatsApp erhalten",
+    emailTitle: "E-Mail", emailDesc: "Angebot per E-Mail erhalten",
+    successTitle: "Anfrage <em>Eingegangen</em>", successText: "Wir senden Ihr Angebot innerhalb von 24 Stunden",
+    btnHome: "Zur Startseite", btnAbout: "Über Uns",
+    nightSingular: "Nacht", nightPlural: "Nächte",
+    roundSingular: "Runde", roundPlural: "Runden"
+  },
+  en: {
+    back: "Back", stepLabel: "Experience Summary",
+    hdrTitle: "Experience <em>Summary</em>", hdrSub: "Privé Belek Experience",
+    wallTitle: "Your <em>Personal Travel Package</em>", wallSub: "BelkaGolf Belek",
+    sectionDate: "Date & Details", sectionHotel: "Accommodation",
+    sectionGolf: "Golf Program",
+    checkIn: "Check-in Date", nights: "Nights", rounds: "Rounds",
+    hotel: "Hotel", anyHotel: "Any Hotel", selectedHotel: "Selected Hotel",
+    edit: "Edit", notSelected: "Not selected",
+    btnConfirm: "Confirm & Get Quote",
+    contactTitle: "Get <em>Quote</em>", contactSub: "How Should We Reach You?",
+    whatsappTitle: "7/24 Live Support", whatsappDesc: "Get quote via WhatsApp",
+    emailTitle: "Email", emailDesc: "Get quote via email",
+    successTitle: "Request <em>Received</em>", successText: "We will send your quote within 24 hours",
+    btnHome: "Back to Home", btnAbout: "About Us",
+    nightSingular: "Night", nightPlural: "Nights",
+    roundSingular: "Round", roundPlural: "Rounds"
+  },
+  ru: {
+    back: "Назад", stepLabel: "Обзор Опыта",
+    hdrTitle: "Обзор <em>Опыта</em>", hdrSub: "Опыт Privé Belek",
+    wallTitle: "Ваш <em>Персональный Пакет</em>", wallSub: "BelkaGolf Белек",
+    sectionDate: "Дата и Детали", sectionHotel: "Размещение",
+    sectionGolf: "Гольф Программа",
+    checkIn: "Дата Заезда", nights: "Ночей", rounds: "Раундов",
+    hotel: "Отель", anyHotel: "Любой Отель", selectedHotel: "Выбранный Отель",
+    edit: "Изменить", notSelected: "Не выбрано",
+    btnConfirm: "Подтвердить и Получить Предложение",
+    contactTitle: "Получить <em>Предложение</em>", contactSub: "Как с вами связаться?",
+    whatsappTitle: "7/24 Поддержка", whatsappDesc: "Получить предложение через WhatsApp",
+    emailTitle: "Эл. Почта", emailDesc: "Получить предложение по email",
+    successTitle: "Запрос <em>Получен</em>", successText: "Мы отправим ваше предложение в течение 24 часов",
+    btnHome: "На Главную", btnAbout: "О Нас",
+    nightSingular: "Ночь", nightPlural: "Ночей",
+    roundSingular: "Раунд", roundPlural: "Раундов"
+  }
+};
+
+let currentLang = 'tr';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  const t = translations[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = t[el.dataset.i18n];
+    if (v !== undefined) el.innerHTML = v;
+  });
+  document.documentElement.lang = lang;
+  localStorage.setItem('privelang', lang);
+  renderSummary();
+}
+
+document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+
+// ── Hotel Data ──
+const HOTEL_MAP = {
+  'regnum': { name: 'Regnum Carya', hero: 'otel_ana_gorselleri/REGNUM_CARYA_GOLF_RESORT.webp' },
+  'cornelia': { name: 'Cornelia Diamond', hero: 'otel_ana_gorselleri/CORNELIA_DIAMOND_GOLF&SPA.webp' },
+  'gloria': { name: 'Gloria Serenity', hero: 'otel_ana_gorselleri/GLORIA_SERENITY_RESORT.webp' },
+  'kaya': { name: 'Kaya Palazzo', hero: 'otel_ana_gorselleri/KAYA_PALAZZO_GOLF_RESORT.webp' },
+  'sueno-deluxe': { name: 'Sueno Hotels Deluxe', hero: 'otel_ana_gorselleri/SUENO_HOTELS_DELUXE_BELEK.webp' },
+  'sueno-golf': { name: 'Sueno Hotels Golf', hero: 'otel_ana_gorselleri/SUENO_HOTELS_GOLF_BELEK.webp' },
+  'titanic': { name: 'Titanic Deluxe Golf', hero: 'otel_ana_gorselleri/TITANIC_DELUXE_GOLF_BELEK.webp' },
+  'maxxroyal': { name: 'Maxx Royal Belek', hero: 'otel_ana_gorselleri/MAXX_ROYAL_BELEK_GOLF_RESORT.webp' },
+  'sirene': { name: 'Sirene Belek Hotel', hero: 'otel_ana_gorselleri/SIRENE_BELEK_HOTEL.webp' },
+  'kempinski': { name: 'Kempinski The Dome', hero: 'otel_ana_gorselleri/KEMPINSKI_HOTEL_THE_DOME.webp' },
+  'lykia': { name: 'Lykia World Antalya', hero: 'otel_ana_gorselleri/LYKIA_WORLD_ANTALYA.webp' },
+  'voyage': { name: 'Voyage Belek Golf', hero: 'otel_ana_gorselleri/VOYAGE_BELEK_GOLF&SPA.webp' },
+  'gloria-golf': { name: 'Gloria Golf Resort', hero: 'otel_ana_gorselleri/GLORIA_GOLF_RESORT.webp' },
+  'cullinan': { name: 'Cullinan Golf Resort', hero: 'otel_ana_gorselleri/CULLINAN_GOLF_RESORT.webp' },
+  'gloria-verde': { name: 'Gloria Verde Resort', hero: 'otel_ana_gorselleri/GLORIA_VERDE_RESORT.webp' },
+  'kaya-belek': { name: 'Kaya Belek Hotel', hero: 'otel_ana_gorselleri/KAYA_BELEK_HOTEL.webp' }
+};
+
+// ── Render Summary ──
+function renderSummary() {
+  const t = translations[currentLang];
+  const checkIn = localStorage.getItem('priveCheckIn') || '';
+  const nights = localStorage.getItem('priveNights') || '';
+  const rounds = localStorage.getItem('priveRounds') || '';
+  const hotelKey = localStorage.getItem('priveHotel') || '';
+
+  let html = '';
+
+  // ── DATE SECTION ──
+  html += `
+    <div class="sum-section">
+      <div class="sum-header">
+        <div class="sum-label">
+          <div class="sum-icon">D</div>
+          <div class="sum-title">${t.sectionDate}</div>
+        </div>
+        <button class="sum-edit-btn" onclick="location.href='2.html'">${t.edit}</button>
+      </div>
+      <div class="sum-content">
+        <div class="sum-item">
+          <div class="sum-item-dot"></div>
+          <span>${t.checkIn}: <strong>${checkIn || t.notSelected}</strong></span>
+        </div>
+        <div class="sum-item">
+          <div class="sum-item-dot"></div>
+          <span>${t.nights}: <strong>${nights ? nights + ' ' + (nights === '1' ? t.nightSingular : t.nightPlural) : t.notSelected}</strong></span>
+        </div>
+        <div class="sum-item">
+          <div class="sum-item-dot"></div>
+          <span>${t.rounds}: <strong>${rounds ? rounds + ' ' + (rounds === '1' ? t.roundSingular : t.roundPlural) : t.notSelected}</strong></span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // ── HOTEL SECTION ──
+  html += `
+    <div class="sum-section">
+      <div class="sum-header">
+        <div class="sum-label">
+          <div class="sum-icon">H</div>
+          <div class="sum-title">${t.sectionHotel}</div>
+        </div>
+        <button class="sum-edit-btn" onclick="location.href='2.html'">${t.edit}</button>
+      </div>
+      <div class="sum-content">
+  `;
+
+  if (hotelKey && hotelKey !== 'any') {
+    const hotel = HOTEL_MAP[hotelKey];
+    if (hotel) {
+      html += `
+        <div class="sum-hotel-img">
+          <img src="${hotel.hero}" alt="${hotel.name}" onerror="this.style.display='none';this.parentElement.style.background='rgba(201,169,110,.08)';">
+        </div>
+        <div class="sum-item">
+          <div class="sum-item-dot"></div>
+          <span>${t.selectedHotel}: <strong>${hotel.name}</strong></span>
+        </div>
+      `;
+    } else {
+      html += `<div class="sum-item">${t.hotel}: <strong>${hotelKey}</strong></div>`;
+    }
+  } else {
+    html += `
+      <div class="sum-item">
+        <div class="sum-item-dot"></div>
+        <span>${t.hotel}: <strong>${t.anyHotel}</strong></span>
+      </div>
+    `;
+  }
+
+  html += `</div></div>`;
+
+  // ── GOLF SECTION ──
+  html += `
+    <div class="sum-section">
+      <div class="sum-header">
+        <div class="sum-label">
+          <div class="sum-icon">G</div>
+          <div class="sum-title">${t.sectionGolf}</div>
+        </div>
+        <button class="sum-edit-btn" onclick="location.href='2.html'">${t.edit}</button>
+      </div>
+      <div class="sum-content">
+        <div class="sum-item">
+          <div class="sum-item-dot"></div>
+          <span>${t.rounds}: <strong>${rounds ? rounds + ' ' + (rounds === '1' ? t.roundSingular : t.roundPlural) : t.notSelected}</strong></span>
+        </div>
+        <div class="sum-item">
+          <div class="sum-item-dot"></div>
+          <span>${t.hotel}: <strong>${hotelKey && hotelKey !== 'any' ? (HOTEL_MAP[hotelKey]?.name || hotelKey) : t.anyHotel}</strong></span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('summaryContent').innerHTML = html;
+}
+
+// ── Build Summary Text for sharing ──
+function buildSummaryText() {
+  const t = translations[currentLang];
+  const checkIn = localStorage.getItem('priveCheckIn') || t.notSelected;
+  const nights = localStorage.getItem('priveNights') || '';
+  const rounds = localStorage.getItem('priveRounds') || '';
+  const hotelKey = localStorage.getItem('priveHotel') || '';
+  const hotel = hotelKey && hotelKey !== 'any' ? (HOTEL_MAP[hotelKey]?.name || hotelKey) : t.anyHotel;
+
+  let text = "*BelkaGolf - Teklif Talebi*\n";
+  text += "═══════════════════════\n\n";
+  text += "📅 " + t.checkIn + ": " + checkIn + "\n";
+  text += "🌙 " + t.nights + ": " + (nights ? nights + " " + (nights === '1' ? t.nightSingular : t.nightPlural) : t.notSelected) + "\n";
+  text += "⛳ " + t.rounds + ": " + (rounds ? rounds + " " + (rounds === '1' ? t.roundSingular : t.roundPlural) : t.notSelected) + "\n";
+  text += "🏨 " + t.hotel + ": " + hotel + "\n\n";
+  text += "═══════════════════════\n";
+  text += "BelkaGolf Belek - Lüks Golf Deneyimleri";
+  return text;
+}
+
+// ── Contact Modal ──
+function openContactModal() {
+  document.getElementById('contactOv').classList.add('open');
+}
+function closeContactModal() {
+  document.getElementById('contactOv').classList.remove('open');
+}
+
+// ── WhatsApp ──
+function sendToWhatsapp(e) {
+  e.preventDefault();
+  const text = buildSummaryText();
+  const phone = "905322622773";
+  const url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(text);
+  window.open(url, '_blank');
+  closeContactModal();
+}
+
+// ── Email ──
+function sendToEmail(e) {
+  e.preventDefault();
+  const t = translations[currentLang];
+  const text = buildSummaryText();
+  const subject = encodeURIComponent("BelkaGolf - Teklif Talebi");
+  const body = encodeURIComponent(text.replace(/\n/g, "\n"));
+  const url = "mailto:info@belkagolf.com?subject=" + subject + "&body=" + body;
+  window.location.href = url;
+  closeContactModal();
+}
+
+// ── Close modal on backdrop click ──
+document.getElementById('contactOv').addEventListener('click', function(e) {
+  if (e.target === this) closeContactModal();
+});
+
+// ── Init ──
+setLang(localStorage.getItem('privelang') || 'tr');
+</script>
+</body>
+</html>
