@@ -633,17 +633,22 @@ function toggleHotel() {
 
 document.querySelectorAll('#hotelOpts .ctrl-opt').forEach(opt => {
   opt.addEventListener('click', () => {
-    selectedHotel = opt.dataset.val;
+    const val = opt.dataset.val;
+    // If "Otel Seç" chosen, redirect to page4.html immediately (don't save 'select')
+    if (val === 'select') {
+      closeAll();
+      setTimeout(() => window.location.href = 'page4.html', 200);
+      return;
+    }
+    // "Herhangi Bir Otel" selected
+    selectedHotel = val;
+    localStorage.setItem('priveHotel', val);
     document.querySelectorAll('#hotelOpts .ctrl-opt').forEach(o => o.classList.remove('selected'));
     opt.classList.add('selected');
     const span = document.getElementById('hotelVal');
     span.textContent = opt.textContent.trim();
     span.classList.add('picked');
     document.getElementById('hotelCtrl').classList.add('has-value');
-    // If "Otel Seç" chosen, redirect to page4.html
-    if (selectedHotel === 'select') {
-      setTimeout(() => window.location.href = 'page4.html', 300);
-    }
     closeAll();
   });
 });
