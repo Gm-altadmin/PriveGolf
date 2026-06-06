@@ -61,44 +61,93 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a1a10}
 .slogan-tr em{color:#C9A96E;font-style:italic}
 .slogan-en{font-family:'Montserrat',sans-serif;font-size:clamp(9px,1.1vw,12px);font-weight:400;letter-spacing:.5em;text-transform:uppercase;color:rgba(201,169,110,.7);opacity:0;animation:fadeIn 1.4s 4.6s ease forwards}
 
-/* ── PREMIUM CTA BUTTON ── */
-.cta-w{margin-top:56px;opacity:0;animation:fadeIn 1.2s 5.2s ease forwards}
+/* ── ULTRA PREMIUM CTA BUTTON ── */
+.cta-w{margin-top:64px;opacity:0;animation:fadeIn 1.2s 5.2s ease forwards}
 
 .btn-premium{
-  position:relative;display:inline-flex;align-items:center;gap:14px;
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
   font-family:'Montserrat',sans-serif;
-  font-size:11px;font-weight:500;letter-spacing:.45em;
-  text-transform:uppercase;color:#C9A96E;
-  background:rgba(10,26,16,.45);
-  padding:18px 44px;
-  border:1px solid rgba(201,169,110,.35);
+  font-size:11px;font-weight:500;letter-spacing:.6em;
+  text-transform:uppercase;color:#E8D5A8;
+  padding:24px 64px;
   text-decoration:none;cursor:pointer;
-  transition:all .5s cubic-bezier(.16,1,.3,1);
-  backdrop-filter:blur(8px);
-  overflow:hidden;
+  transition:all .6s cubic-bezier(.16,1,.3,1);
+  background:rgba(201,169,110,0.05);
+  backdrop-filter:blur(15px);
+  border:1px solid rgba(201,169,110,0.2);
+  overflow:visible;
 }
-.btn-premium::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(201,169,110,.08) 0%,transparent 50%,rgba(201,169,110,.06) 100%);
-  opacity:0;transition:opacity .5s ease;
-}
-.btn-premium::after{
-  content:'';position:absolute;inset:-1px;
-  background:linear-gradient(90deg,transparent,rgba(201,169,110,.5),transparent);
-  opacity:0;transition:opacity .5s ease;z-index:-1;
-}
-.btn-premium:hover{
-  color:#0a1a10;background:#C9A96E;border-color:#C9A96E;
-  letter-spacing:.55em;
-  box-shadow:0 8px 32px rgba(201,169,110,.25),0 0 60px rgba(201,169,110,.1);
-  transform:translateY(-2px);
-}
-.btn-premium:hover::before{opacity:1}
-.btn-premium:hover::after{opacity:.3}
-.btn-premium:active{transform:translateY(0) scale(.98);box-shadow:0 4px 16px rgba(201,169,110,.15);}
 
-.btn-orn{width:4px;height:4px;background:#C9A96E;transform:rotate(45deg);transition:background .5s,transform .5s;flex-shrink:0;}
-.btn-premium:hover .btn-orn{background:#0a1a10;transform:rotate(45deg) scale(1.3);}
+/* İç Çerçeve */
+.btn-premium::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(201,169,110,0.4);
+  transition: all .6s ease;
+}
+
+/* Köşe Elmasları */
+.btn-premium .corner {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #C9A96E;
+  transform: rotate(45deg);
+  box-shadow: 0 0 10px #C9A96E;
+  transition: all .6s ease;
+}
+.btn-premium .c-tl { top: -3px; left: -3px; }
+.btn-premium .c-tr { top: -3px; right: -3px; }
+.btn-premium .c-bl { bottom: -3px; left: -3px; }
+.btn-premium .c-br { bottom: -3px; right: -3px; }
+
+/* Parlama Efekti */
+.btn-premium .shine {
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+  transform: skewX(-25deg);
+  animation: premiumShine 4s infinite;
+}
+
+@keyframes premiumShine {
+  0% { left: -100%; }
+  30% { left: 150%; }
+  100% { left: 150%; }
+}
+
+/* Nabız Dalgalanması */
+.btn-premium {
+  animation: premiumPulse 2.5s infinite;
+}
+
+@keyframes premiumPulse {
+  0% { box-shadow: 0 0 0 0 rgba(201,169,110, 0.2), 0 0 40px rgba(0,0,0,0.3); }
+  70% { box-shadow: 0 0 0 20px rgba(201,169,110, 0), 0 0 40px rgba(0,0,0,0.3); }
+  100% { box-shadow: 0 0 0 0 rgba(201,169,110, 0), 0 0 40px rgba(0,0,0,0.3); }
+}
+
+.btn-premium:hover{
+  background:rgba(201,169,110,0.15);
+  color:#fff;
+  letter-spacing:.7em;
+  transform:translateY(-5px);
+  border-color:rgba(201,169,110,0.6);
+}
+
+.btn-premium:hover::before {
+  inset: -2px;
+  border-color: rgba(201,169,110,0.8);
+}
+
+.btn-premium:hover .corner {
+  background: #fff;
+  box-shadow: 0 0 15px #fff;
+}
+
+.btn-premium:active{transform:translateY(-2px) scale(.98);}
 
 /* ── BOTTOM BAR ── */
 .bottom-bar{position:fixed;bottom:0;left:0;right:0;z-index:20;padding:28px 52px;display:flex;align-items:flex-end;justify-content:center;opacity:0;animation:fadeIn 1s 5.8s ease forwards}
@@ -123,23 +172,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a1a10}
   .slogan-tr{font-size:clamp(14px,4vw,20px)}
   .slogan-en{font-size:8px;letter-spacing:.35em}
 
-  .btn-premium{font-size:9px;padding:14px 32px;letter-spacing:.35em}
-  .btn-premium:hover{letter-spacing:.4em}
+  .btn-premium{font-size:9px;padding:18px 44px;letter-spacing:.4em}
+  .btn-premium:hover{letter-spacing:.45em}
 
   .bottom-bar{padding:16px 24px}
   .bot-loc{font-size:8px;letter-spacing:.25em}
   .bot-loc::before{width:16px}
 }
-
-@media (max-width: 480px) {
-  .logo-prive{font-size:clamp(28px,12vw,48px)}
-  .logo-belek{font-size:clamp(16px,7vw,28px)}
-  .slogan-tr{font-size:clamp(12px,4vw,16px)}
-  .btn-premium{padding:12px 28px;font-size:8px}
-  .lang-switcher{gap:2px}
-  .lang-btn{padding:2px 4px;font-size:7px}
-}
 </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -171,10 +212,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a1a10}
     <div class="slogan-en" data-i18n="sloganSub">More than just a round of golf</div>
   </div>
   <div class="cta-w">
-    <a class="btn-premium" id="btn" href="page2.html">
-      <span class="btn-orn"></span>
+    <a class="btn-premium" id="btn" href="2.html">
+      <div class="corner c-tl"></div>
+      <div class="corner c-tr"></div>
+      <div class="corner c-bl"></div>
+      <div class="corner c-br"></div>
+      <div class="shine"></div>
       <span data-i18n="cta">Deneyimini Tasarla</span>
-      <span class="btn-orn"></span>
     </a>
   </div>
 </div>
@@ -222,12 +266,10 @@ const i18nEls = document.querySelectorAll('[data-i18n]');
 const sloganSubEl = document.querySelector('[data-i18n="sloganSub"]');
 
 function setLang(lang) {
-  // Update active state
   langBtns.forEach(btn => {
     btn.classList.toggle('active', btn.dataset.lang === lang);
   });
 
-  // Update text content
   const t = translations[lang];
   i18nEls.forEach(el => {
     const key = el.dataset.i18n;
@@ -236,12 +278,10 @@ function setLang(lang) {
     }
   });
 
-  // Show/hide sloganSub based on language
   if (sloganSubEl) {
     sloganSubEl.style.display = (lang === 'tr') ? '' : 'none';
   }
 
-  // Update html lang attribute
   document.documentElement.lang = lang;
 }
 
@@ -249,15 +289,13 @@ langBtns.forEach(btn => {
   btn.addEventListener('click', () => setLang(btn.dataset.lang));
 });
 
-// ── CTA Click ──
 const btn = document.getElementById('btn');
 btn.addEventListener('click', e => {
   e.preventDefault();
   btn.style.pointerEvents = 'none';
   btn.style.opacity = '.7';
-  // Save current language before navigating
   localStorage.setItem('privelang', document.documentElement.lang);
-  setTimeout(() => { window.location.href = 'page2.html'; }, 400);
+  setTimeout(() => { window.location.href = '2.html'; }, 400);
 });
 </script>
 </body>
